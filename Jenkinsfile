@@ -1,27 +1,22 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18'
-            args '--entrypoint=""'
-            reuseNode true
-        }
-    }
+    agent any
 
     stages {
-         stage('Temizlik') {
-            steps {
-                sh '''
-                rm -rf *
-                '''
-            }
         stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
             steps {
                 sh '''
-                    echo "Node versiyonu:"
-                    node -v
-                    echo "NPM versiyonu:"
-                    npm -v
-                    npm install
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
                 '''
             }
         }
