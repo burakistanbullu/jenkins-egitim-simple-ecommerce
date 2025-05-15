@@ -10,7 +10,9 @@ pipeline {
     stages {
          stage('Temizlik') {
             steps {
-                deleteDir()
+                sh '''
+                rm -rf *
+                '''
             }
         stage('Build') {
             steps {
