@@ -8,6 +8,10 @@ pipeline {
     }
 
     stages {
+         stage('Temizlik') {
+            steps {
+                deleteDir()
+            }
         stage('Build') {
             steps {
                 sh '''
