@@ -1,33 +1,35 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:18-alpine'
+            reuseNode true
+        }
+    }
 
     stages {
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
+        stage('Temizlik') {
+            steps {
+                deleteDir()
             }
+        }
+
+        stage('Build') {
             steps {
                 sh '''
-                    echo "Dosyalar:"
-                    ls -la
-
-                    echo "Node ve NPM versiyonları:"
+                    echo "Node.js ve NPM versiyonları"
                     node --version
                     npm --version
 
-                    echo "npm install başlatılıyor..."
-                    npm ci
+                    echo "npm cache temizleniyor..."
+                    npm cache clean --force
 
-                    echo "Uygulama test amaçlı başlatılıyor..."
+                    echo "Bağımlılıklar yükleniyor..."
+                    npm install
+
+                    echo "Uygulama çalıştırılıyor..."
                     node app.js &
-
                     sleep 3
                     curl -s http://localhost:3000 || echo "Uygulama cevap vermiyor"
-
-                    echo "Build tamamlandı"
                 '''
             }
         }
