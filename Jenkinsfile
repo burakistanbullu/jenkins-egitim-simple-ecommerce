@@ -16,20 +16,15 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    echo "Node.js ve NPM versiyonları"
-                    node --version
-                    npm --version
+                    echo "Node.js ve NPM versiyonları:"
+                    node -v
+                    npm -v
 
-                    echo "npm cache temizleniyor..."
-                    npm cache clean --force
-
-                    echo "Bağımlılıklar yükleniyor..."
+                    echo "npm install başlatılıyor..."
                     npm install
 
-                    echo "Uygulama çalıştırılıyor..."
-                    node app.js &
-                    sleep 3
-                    curl -s http://localhost:3000 || echo "Uygulama cevap vermiyor"
+                    echo "Build klasörü listeleniyor:"
+                    ls -la
                 '''
             }
         }
